@@ -1,0 +1,790 @@
+[
+  {
+    "id": "0d86ba31-af51-44b0-997b-94d0cb7dc3ad",
+    "zone": "Ward_1",
+    "skills": [
+      "counseling",
+      "translation"
+    ],
+    "reliability_score": 69,
+    "historical_completion_rate": 0.57,
+    "avg_response_time_hrs": 7.62,
+    "total_assignments": 26,
+    "active": true
+  },
+  {
+    "id": "2b843451-ce67-4af7-ac3d-ceb8159c0c1b",
+    "zone": "Ward_2",
+    "skills": [
+      "driving",
+      "translation"
+    ],
+    "reliability_score": 39,
+    "historical_completion_rate": 0.557,
+    "avg_response_time_hrs": 6.06,
+    "total_assignments": 0,
+    "active": true
+  },
+  {
+    "id": "e1898b2f-c9e2-4dcc-ad7a-97d4406c0c3e",
+    "zone": "Ward_5",
+    "skills": [
+      "first_aid"
+    ],
+    "reliability_score": 80,
+    "historical_completion_rate": 0.458,
+    "avg_response_time_hrs": 9.37,
+    "total_assignments": 49,
+    "active": true
+  },
+  {
+    "id": "00084df5-e4fb-4392-9a4e-ab9e65f40fdc",
+    "zone": "Ward_1",
+    "skills": [
+      "driving",
+      "translation"
+    ],
+    "reliability_score": 69,
+    "historical_completion_rate": 0.904,
+    "avg_response_time_hrs": 9.82,
+    "total_assignments": 42,
+    "active": true
+  },
+  {
+    "id": "b0925428-c262-4f4c-b0b5-7d5710d780d1",
+    "zone": "Ward_4",
+    "skills": [
+      "translation",
+      "first_aid",
+      "counseling"
+    ],
+    "reliability_score": 58,
+    "historical_completion_rate": 0.718,
+    "avg_response_time_hrs": 9.26,
+    "total_assignments": 24,
+    "active": true
+  },
+  {
+    "id": "db2b77f3-5deb-4a5d-8f07-0fe3bd09adae",
+    "zone": "Ward_4",
+    "skills": [
+      "translation",
+      "medical_license"
+    ],
+    "reliability_score": 89,
+    "historical_completion_rate": 0.8,
+    "avg_response_time_hrs": 4.18,
+    "total_assignments": 11,
+    "active": true
+  },
+  {
+    "id": "2c802361-9904-4443-8599-a22a287380e4",
+    "zone": "Ward_4",
+    "skills": [
+      "translation"
+    ],
+    "reliability_score": 45,
+    "historical_completion_rate": 0.427,
+    "avg_response_time_hrs": 2.22,
+    "total_assignments": 12,
+    "active": true
+  },
+  {
+    "id": "f61999b4-99c3-4814-83d6-f59090c820b6",
+    "zone": "Ward_3",
+    "skills": [
+      "heavy_lifting",
+      "driving"
+    ],
+    "reliability_score": 58,
+    "historical_completion_rate": 0.805,
+    "avg_response_time_hrs": 1.04,
+    "total_assignments": 32,
+    "active": true
+  },
+  {
+    "id": "5b1bc2e6-5315-4838-8d9c-fc61686372f5",
+    "zone": "Ward_4",
+    "skills": [
+      "translation",
+      "medical_license"
+    ],
+    "reliability_score": 50,
+    "historical_completion_rate": 0.937,
+    "avg_response_time_hrs": 9.16,
+    "total_assignments": 39,
+    "active": true
+  },
+  {
+    "id": "9b43bf67-420f-48dc-be64-4f0158557d58",
+    "zone": "Ward_3",
+    "skills": [
+      "first_aid",
+      "counseling"
+    ],
+    "reliability_score": 86,
+    "historical_completion_rate": 0.771,
+    "avg_response_time_hrs": 1.99,
+    "total_assignments": 56,
+    "active": true
+  },
+  {
+    "id": "f8179e0e-7e7c-4d3a-a488-3b34c343f94c",
+    "zone": "Ward_1",
+    "skills": [
+      "driving",
+      "first_aid"
+    ],
+    "reliability_score": 44,
+    "historical_completion_rate": 0.809,
+    "avg_response_time_hrs": 3.43,
+    "total_assignments": 39,
+    "active": true
+  },
+  {
+    "id": "4deb33bb-f650-4627-8aad-420fa07ad525",
+    "zone": "Ward_4",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 56,
+    "historical_completion_rate": 0.775,
+    "avg_response_time_hrs": 2.24,
+    "total_assignments": 53,
+    "active": true
+  },
+  {
+    "id": "e0f71e23-f0f1-40e7-8418-13d2d1bdd511",
+    "zone": "Ward_4",
+    "skills": [
+      "first_aid",
+      "translation"
+    ],
+    "reliability_score": 95,
+    "historical_completion_rate": 0.604,
+    "avg_response_time_hrs": 5.33,
+    "total_assignments": 44,
+    "active": true
+  },
+  {
+    "id": "4ed0f8bd-f4da-44d1-8511-84665b3ecb0c",
+    "zone": "Ward_1",
+    "skills": [
+      "medical_license",
+      "translation",
+      "driving"
+    ],
+    "reliability_score": 34,
+    "historical_completion_rate": 0.957,
+    "avg_response_time_hrs": 5.48,
+    "total_assignments": 43,
+    "active": true
+  },
+  {
+    "id": "13e5020b-25e6-4582-9355-e83fef9838b1",
+    "zone": "Ward_5",
+    "skills": [
+      "driving",
+      "heavy_lifting",
+      "counseling"
+    ],
+    "reliability_score": 78,
+    "historical_completion_rate": 0.992,
+    "avg_response_time_hrs": 5.05,
+    "total_assignments": 53,
+    "active": true
+  },
+  {
+    "id": "47c515a7-90d6-4dd3-ae2f-38503e6a618f",
+    "zone": "Ward_4",
+    "skills": [
+      "counseling",
+      "heavy_lifting",
+      "translation"
+    ],
+    "reliability_score": 65,
+    "historical_completion_rate": 0.563,
+    "avg_response_time_hrs": 5.21,
+    "total_assignments": 10,
+    "active": true
+  },
+  {
+    "id": "875b6f98-e280-4fa5-95ba-7c601ab77753",
+    "zone": "Ward_4",
+    "skills": [
+      "heavy_lifting",
+      "medical_license"
+    ],
+    "reliability_score": 80,
+    "historical_completion_rate": 0.904,
+    "avg_response_time_hrs": 6.75,
+    "total_assignments": 56,
+    "active": true
+  },
+  {
+    "id": "395f8cd3-8d4f-4415-9b9e-521a53a6d98f",
+    "zone": "Ward_3",
+    "skills": [
+      "translation",
+      "driving"
+    ],
+    "reliability_score": 72,
+    "historical_completion_rate": 0.711,
+    "avg_response_time_hrs": 6.73,
+    "total_assignments": 24,
+    "active": true
+  },
+  {
+    "id": "8f4f081f-4110-4413-9975-6eb12f6a0e9f",
+    "zone": "Ward_5",
+    "skills": [
+      "translation",
+      "counseling"
+    ],
+    "reliability_score": 63,
+    "historical_completion_rate": 0.983,
+    "avg_response_time_hrs": 7.57,
+    "total_assignments": 22,
+    "active": true
+  },
+  {
+    "id": "8974db85-9f02-44e5-81b8-4e3cdad0834f",
+    "zone": "Ward_3",
+    "skills": [
+      "medical_license",
+      "heavy_lifting"
+    ],
+    "reliability_score": 86,
+    "historical_completion_rate": 0.944,
+    "avg_response_time_hrs": 8.7,
+    "total_assignments": 41,
+    "active": true
+  },
+  {
+    "id": "eb911fd8-c403-444b-bae8-e39c6b06134a",
+    "zone": "Ward_2",
+    "skills": [
+      "medical_license"
+    ],
+    "reliability_score": 62,
+    "historical_completion_rate": 0.414,
+    "avg_response_time_hrs": 3.96,
+    "total_assignments": 28,
+    "active": true
+  },
+  {
+    "id": "6adad187-3348-4fc6-80dc-953198900075",
+    "zone": "Ward_1",
+    "skills": [
+      "heavy_lifting",
+      "translation"
+    ],
+    "reliability_score": 64,
+    "historical_completion_rate": 0.808,
+    "avg_response_time_hrs": 7.61,
+    "total_assignments": 39,
+    "active": true
+  },
+  {
+    "id": "4cd5bfbe-b581-4715-8666-5c5b7f3f229e",
+    "zone": "Ward_5",
+    "skills": [
+      "counseling",
+      "heavy_lifting"
+    ],
+    "reliability_score": 63,
+    "historical_completion_rate": 0.6,
+    "avg_response_time_hrs": 0.76,
+    "total_assignments": 28,
+    "active": true
+  },
+  {
+    "id": "5ce6b376-db33-4d7e-a563-a048abce9c4a",
+    "zone": "Ward_1",
+    "skills": [
+      "counseling",
+      "translation"
+    ],
+    "reliability_score": 91,
+    "historical_completion_rate": 0.715,
+    "avg_response_time_hrs": 4.06,
+    "total_assignments": 34,
+    "active": true
+  },
+  {
+    "id": "df5b65b0-48fb-4311-b049-159404feabe7",
+    "zone": "Ward_5",
+    "skills": [
+      "heavy_lifting"
+    ],
+    "reliability_score": 77,
+    "historical_completion_rate": 0.955,
+    "avg_response_time_hrs": 6.01,
+    "total_assignments": 11,
+    "active": true
+  },
+  {
+    "id": "e8901906-bb45-44ca-89db-d5bf508e6a0a",
+    "zone": "Ward_4",
+    "skills": [
+      "translation",
+      "first_aid",
+      "heavy_lifting"
+    ],
+    "reliability_score": 78,
+    "historical_completion_rate": 0.582,
+    "avg_response_time_hrs": 7.53,
+    "total_assignments": 2,
+    "active": true
+  },
+  {
+    "id": "f4fe8a4a-79ea-4f20-8522-f10e972c59a3",
+    "zone": "Ward_2",
+    "skills": [
+      "counseling",
+      "first_aid",
+      "driving"
+    ],
+    "reliability_score": 88,
+    "historical_completion_rate": 0.525,
+    "avg_response_time_hrs": 9.69,
+    "total_assignments": 56,
+    "active": true
+  },
+  {
+    "id": "277580dd-99eb-42a2-9890-c72f1e77d285",
+    "zone": "Ward_1",
+    "skills": [
+      "first_aid",
+      "counseling"
+    ],
+    "reliability_score": 79,
+    "historical_completion_rate": 0.531,
+    "avg_response_time_hrs": 8.2,
+    "total_assignments": 45,
+    "active": true
+  },
+  {
+    "id": "826f59ce-287a-4d55-b415-7e3af6186afc",
+    "zone": "Ward_1",
+    "skills": [
+      "first_aid",
+      "counseling"
+    ],
+    "reliability_score": 35,
+    "historical_completion_rate": 0.881,
+    "avg_response_time_hrs": 8.86,
+    "total_assignments": 26,
+    "active": true
+  },
+  {
+    "id": "7115a6cc-3afd-4053-846e-a54d07cc72c6",
+    "zone": "Ward_5",
+    "skills": [
+      "translation",
+      "heavy_lifting"
+    ],
+    "reliability_score": 87,
+    "historical_completion_rate": 0.779,
+    "avg_response_time_hrs": 4.6,
+    "total_assignments": 12,
+    "active": true
+  },
+  {
+    "id": "16f5d9f0-cd87-46ba-a01f-e5a680cf4064",
+    "zone": "Ward_3",
+    "skills": [
+      "driving",
+      "medical_license"
+    ],
+    "reliability_score": 84,
+    "historical_completion_rate": 0.56,
+    "avg_response_time_hrs": 9.84,
+    "total_assignments": 50,
+    "active": true
+  },
+  {
+    "id": "2ad426db-3868-49e6-9377-ee24b5e5644e",
+    "zone": "Ward_2",
+    "skills": [
+      "driving",
+      "first_aid"
+    ],
+    "reliability_score": 57,
+    "historical_completion_rate": 0.91,
+    "avg_response_time_hrs": 9.54,
+    "total_assignments": 57,
+    "active": true
+  },
+  {
+    "id": "5fc4cf3d-975c-4ef6-9a38-d1095c749a3b",
+    "zone": "Ward_5",
+    "skills": [
+      "heavy_lifting",
+      "translation"
+    ],
+    "reliability_score": 90,
+    "historical_completion_rate": 0.559,
+    "avg_response_time_hrs": 3.69,
+    "total_assignments": 9,
+    "active": true
+  },
+  {
+    "id": "ffde924b-ed9e-44c4-90a7-473c1a7b8ae9",
+    "zone": "Ward_5",
+    "skills": [
+      "medical_license"
+    ],
+    "reliability_score": 66,
+    "historical_completion_rate": 0.891,
+    "avg_response_time_hrs": 1.16,
+    "total_assignments": 56,
+    "active": true
+  },
+  {
+    "id": "7ee1668c-bc06-4889-a921-d2de24ee1079",
+    "zone": "Ward_2",
+    "skills": [
+      "first_aid"
+    ],
+    "reliability_score": 92,
+    "historical_completion_rate": 0.662,
+    "avg_response_time_hrs": 5.09,
+    "total_assignments": 34,
+    "active": true
+  },
+  {
+    "id": "442879ab-38dd-4b26-bfba-a270a81c8302",
+    "zone": "Ward_5",
+    "skills": [
+      "medical_license"
+    ],
+    "reliability_score": 71,
+    "historical_completion_rate": 0.469,
+    "avg_response_time_hrs": 3.34,
+    "total_assignments": 33,
+    "active": true
+  },
+  {
+    "id": "066a16da-5a4e-4e7e-8b3b-c1d21884c07a",
+    "zone": "Ward_4",
+    "skills": [
+      "translation",
+      "driving"
+    ],
+    "reliability_score": 90,
+    "historical_completion_rate": 0.521,
+    "avg_response_time_hrs": 2.36,
+    "total_assignments": 15,
+    "active": true
+  },
+  {
+    "id": "146738fd-e269-4dd2-8dd2-0fdd276564f9",
+    "zone": "Ward_1",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 63,
+    "historical_completion_rate": 0.551,
+    "avg_response_time_hrs": 8.95,
+    "total_assignments": 28,
+    "active": true
+  },
+  {
+    "id": "88b73144-af87-4338-85f5-15b4527fa5fd",
+    "zone": "Ward_5",
+    "skills": [
+      "counseling",
+      "medical_license",
+      "driving"
+    ],
+    "reliability_score": 56,
+    "historical_completion_rate": 0.913,
+    "avg_response_time_hrs": 0.72,
+    "total_assignments": 51,
+    "active": true
+  },
+  {
+    "id": "90218870-2566-46f2-9eff-18d753ecc223",
+    "zone": "Ward_4",
+    "skills": [
+      "medical_license",
+      "heavy_lifting"
+    ],
+    "reliability_score": 34,
+    "historical_completion_rate": 0.511,
+    "avg_response_time_hrs": 4.94,
+    "total_assignments": 46,
+    "active": true
+  },
+  {
+    "id": "bcfd89d6-e22c-48c2-8fcd-201920daafea",
+    "zone": "Ward_3",
+    "skills": [
+      "translation",
+      "driving"
+    ],
+    "reliability_score": 85,
+    "historical_completion_rate": 0.854,
+    "avg_response_time_hrs": 1.07,
+    "total_assignments": 5,
+    "active": true
+  },
+  {
+    "id": "695dc655-f1e6-494e-8f28-945d5defa719",
+    "zone": "Ward_2",
+    "skills": [
+      "medical_license",
+      "translation",
+      "first_aid"
+    ],
+    "reliability_score": 53,
+    "historical_completion_rate": 0.543,
+    "avg_response_time_hrs": 7.33,
+    "total_assignments": 59,
+    "active": true
+  },
+  {
+    "id": "8e050bc6-d36f-419b-8ff5-288f3b6953e6",
+    "zone": "Ward_5",
+    "skills": [
+      "heavy_lifting"
+    ],
+    "reliability_score": 44,
+    "historical_completion_rate": 0.476,
+    "avg_response_time_hrs": 5.17,
+    "total_assignments": 16,
+    "active": true
+  },
+  {
+    "id": "4ad7d95f-71ef-4889-af89-6d57ec101581",
+    "zone": "Ward_5",
+    "skills": [
+      "translation",
+      "medical_license"
+    ],
+    "reliability_score": 68,
+    "historical_completion_rate": 0.976,
+    "avg_response_time_hrs": 1.47,
+    "total_assignments": 47,
+    "active": true
+  },
+  {
+    "id": "2d2a8e68-e59f-48d6-ac35-2b816875c587",
+    "zone": "Ward_4",
+    "skills": [
+      "heavy_lifting"
+    ],
+    "reliability_score": 82,
+    "historical_completion_rate": 0.961,
+    "avg_response_time_hrs": 4.74,
+    "total_assignments": 21,
+    "active": true
+  },
+  {
+    "id": "5a31aa07-8cde-46ee-9546-46cb3cbbbb71",
+    "zone": "Ward_5",
+    "skills": [
+      "translation",
+      "first_aid",
+      "driving"
+    ],
+    "reliability_score": 38,
+    "historical_completion_rate": 0.855,
+    "avg_response_time_hrs": 6.47,
+    "total_assignments": 48,
+    "active": true
+  },
+  {
+    "id": "103e4ba9-d24c-4c1d-820a-810490c15384",
+    "zone": "Ward_1",
+    "skills": [
+      "medical_license",
+      "counseling"
+    ],
+    "reliability_score": 33,
+    "historical_completion_rate": 0.891,
+    "avg_response_time_hrs": 3.04,
+    "total_assignments": 31,
+    "active": true
+  },
+  {
+    "id": "5483aa55-162e-47bc-bffb-50990d246aaf",
+    "zone": "Ward_5",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 56,
+    "historical_completion_rate": 0.857,
+    "avg_response_time_hrs": 6.97,
+    "total_assignments": 19,
+    "active": true
+  },
+  {
+    "id": "78ff32df-4def-4615-9eb8-c63100a60a7d",
+    "zone": "Ward_5",
+    "skills": [
+      "translation",
+      "counseling"
+    ],
+    "reliability_score": 55,
+    "historical_completion_rate": 0.883,
+    "avg_response_time_hrs": 2.67,
+    "total_assignments": 33,
+    "active": true
+  },
+  {
+    "id": "2f64f8ee-4185-4099-90d6-c8594e687b4e",
+    "zone": "Ward_4",
+    "skills": [
+      "driving",
+      "heavy_lifting"
+    ],
+    "reliability_score": 72,
+    "historical_completion_rate": 0.796,
+    "avg_response_time_hrs": 7.06,
+    "total_assignments": 0,
+    "active": true
+  },
+  {
+    "id": "b473c940-c4a3-4c69-a1d8-fa4cc0e2b82c",
+    "zone": "Ward_2",
+    "skills": [
+      "counseling",
+      "translation"
+    ],
+    "reliability_score": 91,
+    "historical_completion_rate": 0.511,
+    "avg_response_time_hrs": 1.05,
+    "total_assignments": 0,
+    "active": true
+  },
+  {
+    "id": "f35a45d5-7a31-4749-b072-bb9c9189ca3a",
+    "zone": "Ward_4",
+    "skills": [
+      "first_aid"
+    ],
+    "reliability_score": 100,
+    "historical_completion_rate": 0.921,
+    "avg_response_time_hrs": 5.31,
+    "total_assignments": 50,
+    "active": true
+  },
+  {
+    "id": "e80e0ed6-8762-4de1-b517-62f160860a40",
+    "zone": "Ward_1",
+    "skills": [
+      "driving",
+      "counseling",
+      "heavy_lifting"
+    ],
+    "reliability_score": 84,
+    "historical_completion_rate": 0.695,
+    "avg_response_time_hrs": 5.43,
+    "total_assignments": 47,
+    "active": true
+  },
+  {
+    "id": "14f7c0ae-8d75-4cbc-afd2-d8c718d478d9",
+    "zone": "Ward_3",
+    "skills": [
+      "translation",
+      "counseling",
+      "medical_license"
+    ],
+    "reliability_score": 35,
+    "historical_completion_rate": 0.73,
+    "avg_response_time_hrs": 6.76,
+    "total_assignments": 57,
+    "active": true
+  },
+  {
+    "id": "c5d18a51-b327-4ebd-a093-13fe035ad7c6",
+    "zone": "Ward_2",
+    "skills": [
+      "medical_license",
+      "translation"
+    ],
+    "reliability_score": 33,
+    "historical_completion_rate": 0.52,
+    "avg_response_time_hrs": 2.27,
+    "total_assignments": 40,
+    "active": true
+  },
+  {
+    "id": "ccf7e035-7ff6-4105-ad0b-4541483028c8",
+    "zone": "Ward_3",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 85,
+    "historical_completion_rate": 0.403,
+    "avg_response_time_hrs": 7.28,
+    "total_assignments": 21,
+    "active": true
+  },
+  {
+    "id": "dcdfd4dd-d9bc-4305-84a2-8b203d6fd064",
+    "zone": "Ward_5",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 36,
+    "historical_completion_rate": 0.475,
+    "avg_response_time_hrs": 3.94,
+    "total_assignments": 13,
+    "active": true
+  },
+  {
+    "id": "4738fe3d-757f-4f19-91e5-d90f119347de",
+    "zone": "Ward_4",
+    "skills": [
+      "first_aid",
+      "heavy_lifting",
+      "driving"
+    ],
+    "reliability_score": 55,
+    "historical_completion_rate": 0.531,
+    "avg_response_time_hrs": 9.61,
+    "total_assignments": 52,
+    "active": true
+  },
+  {
+    "id": "825f90c4-2b61-4913-a7fa-9f9b224f289c",
+    "zone": "Ward_3",
+    "skills": [
+      "heavy_lifting"
+    ],
+    "reliability_score": 81,
+    "historical_completion_rate": 0.612,
+    "avg_response_time_hrs": 9.71,
+    "total_assignments": 15,
+    "active": true
+  },
+  {
+    "id": "865bd3ed-856f-49d3-8bf6-ef927b6bcb05",
+    "zone": "Ward_5",
+    "skills": [
+      "driving"
+    ],
+    "reliability_score": 45,
+    "historical_completion_rate": 0.882,
+    "avg_response_time_hrs": 3.11,
+    "total_assignments": 50,
+    "active": true
+  },
+  {
+    "id": "7f690b78-676e-4901-865e-d857026d217c",
+    "zone": "Ward_2",
+    "skills": [
+      "medical_license",
+      "first_aid"
+    ],
+    "reliability_score": 92,
+    "historical_completion_rate": 0.95,
+    "avg_response_time_hrs": 0.5,
+    "total_assignments": 30,
+    "active": true
+  }
+]

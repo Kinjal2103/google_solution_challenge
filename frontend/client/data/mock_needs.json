@@ -1,0 +1,265 @@
+[
+  {
+    "id": "c2aa3e00-b61a-4cd7-812d-230703931df9",
+    "category": "shelter",
+    "zone": "Ward_2",
+    "severity": 2,
+    "vulnerability_index": 2,
+    "people_affected": 14,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 2,
+    "required_skills": []
+  },
+  {
+    "id": "7c213961-f742-4f10-b6ce-f4b3330f7ba7",
+    "category": "livelihood",
+    "zone": "Ward_1",
+    "severity": 3,
+    "vulnerability_index": 4,
+    "people_affected": 4,
+    "hours_until_deadline": 72,
+    "volunteer_count_needed": 1,
+    "required_skills": []
+  },
+  {
+    "id": "949fd5e4-b22b-4e85-9817-21a220c27445",
+    "category": "psychosocial",
+    "zone": "Ward_5",
+    "severity": 4,
+    "vulnerability_index": 3,
+    "people_affected": 8,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "first_aid"
+    ]
+  },
+  {
+    "id": "e22dfb03-b9c2-4446-b64f-555bf9e82105",
+    "category": "livelihood",
+    "zone": "Ward_1",
+    "severity": 2,
+    "vulnerability_index": 4,
+    "people_affected": 7,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 2,
+    "required_skills": []
+  },
+  {
+    "id": "d5de5c05-330a-4f41-8493-9154d6233e4f",
+    "category": "livelihood",
+    "zone": "Ward_4",
+    "severity": 2,
+    "vulnerability_index": 2,
+    "people_affected": 14,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 1,
+    "required_skills": []
+  },
+  {
+    "id": "6d51b800-fd49-409d-8f9d-2cecddae1642",
+    "category": "shelter",
+    "zone": "Ward_1",
+    "severity": 5,
+    "vulnerability_index": 2,
+    "people_affected": 14,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 2,
+    "required_skills": []
+  },
+  {
+    "id": "1b965213-a92a-4be5-9879-3b3d380c546e",
+    "category": "livelihood",
+    "zone": "Ward_5",
+    "severity": 3,
+    "vulnerability_index": 4,
+    "people_affected": 3,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 2,
+    "required_skills": []
+  },
+  {
+    "id": "24b5b414-06a3-4f61-b06e-50f81a3f74ed",
+    "category": "medical",
+    "zone": "Ward_2",
+    "severity": 1,
+    "vulnerability_index": 3,
+    "people_affected": 12,
+    "hours_until_deadline": 12,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "translation"
+    ]
+  },
+  {
+    "id": "59259e7f-5251-4697-ba68-1f9865234348",
+    "category": "shelter",
+    "zone": "Ward_1",
+    "severity": 4,
+    "vulnerability_index": 4,
+    "people_affected": 11,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "heavy_lifting"
+    ]
+  },
+  {
+    "id": "dd4bdb98-bb0d-4d27-bd59-a41ed81821a6",
+    "category": "water",
+    "zone": "Ward_2",
+    "severity": 2,
+    "vulnerability_index": 3,
+    "people_affected": 11,
+    "hours_until_deadline": 12,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "translation"
+    ]
+  },
+  {
+    "id": "efa7a786-af99-4f1f-a605-61068d2e2245",
+    "category": "water",
+    "zone": "Ward_1",
+    "severity": 5,
+    "vulnerability_index": 3,
+    "people_affected": 14,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 2,
+    "required_skills": [
+      "medical_license",
+      "heavy_lifting"
+    ]
+  },
+  {
+    "id": "477697f9-7ab6-4489-9f8d-d4e57b2debfc",
+    "category": "water",
+    "zone": "Ward_1",
+    "severity": 4,
+    "vulnerability_index": 2,
+    "people_affected": 8,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "medical_license"
+    ]
+  },
+  {
+    "id": "544fdc99-ba16-4f52-9110-a2e650b8a265",
+    "category": "education",
+    "zone": "Ward_5",
+    "severity": 2,
+    "vulnerability_index": 4,
+    "people_affected": 5,
+    "hours_until_deadline": 72,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "medical_license",
+      "counseling"
+    ]
+  },
+  {
+    "id": "e07031ca-26ac-499e-975f-8b7e7d42df23",
+    "category": "sanitation",
+    "zone": "Ward_3",
+    "severity": 5,
+    "vulnerability_index": 3,
+    "people_affected": 10,
+    "hours_until_deadline": 12,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "medical_license"
+    ]
+  },
+  {
+    "id": "12995263-f446-4a54-8bb4-7bb30dd306bc",
+    "category": "livelihood",
+    "zone": "Ward_5",
+    "severity": 2,
+    "vulnerability_index": 1,
+    "people_affected": 4,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "counseling"
+    ]
+  },
+  {
+    "id": "b4437212-cc8b-4313-bfae-b24a0346ba83",
+    "category": "livelihood",
+    "zone": "Ward_2",
+    "severity": 4,
+    "vulnerability_index": 4,
+    "people_affected": 8,
+    "hours_until_deadline": 24,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "counseling"
+    ]
+  },
+  {
+    "id": "3dbb7ced-7aab-47b2-84c1-36ae5f3fcca1",
+    "category": "medical",
+    "zone": "Ward_3",
+    "severity": 5,
+    "vulnerability_index": 4,
+    "people_affected": 2,
+    "hours_until_deadline": 6,
+    "volunteer_count_needed": 2,
+    "required_skills": [
+      "medical_license",
+      "translation"
+    ]
+  },
+  {
+    "id": "35f7471a-12f6-467f-b9f8-140e863422b6",
+    "category": "water",
+    "zone": "Ward_5",
+    "severity": 3,
+    "vulnerability_index": 2,
+    "people_affected": 13,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "heavy_lifting"
+    ]
+  },
+  {
+    "id": "d815d3dc-fe71-4534-8d61-dde9b76ad635",
+    "category": "psychosocial",
+    "zone": "Ward_4",
+    "severity": 2,
+    "vulnerability_index": 2,
+    "people_affected": 4,
+    "hours_until_deadline": 48,
+    "volunteer_count_needed": 3,
+    "required_skills": [
+      "medical_license",
+      "driving"
+    ]
+  },
+  {
+    "id": "09d7d58f-8e2e-4e84-8537-27e77701d7bf",
+    "category": "water",
+    "zone": "Ward_3",
+    "severity": 1,
+    "vulnerability_index": 1,
+    "people_affected": 2,
+    "hours_until_deadline": null,
+    "volunteer_count_needed": 1,
+    "required_skills": []
+  },
+  {
+    "id": "7b85bd87-9ae6-49fc-b7a4-17b9f94c68e0",
+    "category": "medical",
+    "zone": "Ward_2",
+    "severity": 5,
+    "vulnerability_index": 5,
+    "people_affected": 10,
+    "hours_until_deadline": 6,
+    "volunteer_count_needed": 1,
+    "required_skills": [
+      "medical_license"
+    ]
+  }
+]

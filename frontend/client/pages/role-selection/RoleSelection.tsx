@@ -1,0 +1,97 @@
+import { Button } from "@/components/ui/button";
+import { Users, Heart } from "lucide-react";
+
+interface RoleSelectionProps {
+  onSelectRole: (role: "coordinator" | "volunteer") => void;
+}
+
+export default function RoleSelection({ onSelectRole }: RoleSelectionProps) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center p-4">
+      <div className="max-w-4xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary rounded-lg mb-4">
+            <span className="text-5xl">🌱</span>
+          </div>
+          <h1 className="text-4xl font-bold text-foreground mb-2">NeedBridge</h1>
+          <p className="text-lg text-muted-foreground">Connecting Communities with Support</p>
+        </div>
+
+        {/* Role Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          {/* Coordinator Card */}
+          <button
+            onClick={() => onSelectRole("coordinator")}
+            className="bg-white rounded-lg border-2 border-border p-8 shadow-lg hover:shadow-xl transition-all hover:border-primary cursor-pointer group"
+          >
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                <Users className="w-12 h-12 text-primary" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Coordinator</h2>
+            <p className="text-muted-foreground mb-6">
+              Manage community needs, coordinate volunteers, and track assignments
+            </p>
+            <div className="space-y-2 mb-8 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                View and manage all community needs
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                Match volunteers to assignments
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                Track progress and completion
+              </p>
+            </div>
+            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+              Continue as Coordinator
+            </Button>
+          </button>
+
+          {/* Volunteer Card */}
+          <button
+            onClick={() => onSelectRole("volunteer")}
+            className="bg-white rounded-lg border-2 border-border p-8 shadow-lg hover:shadow-xl transition-all hover:border-primary cursor-pointer group"
+          >
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                <Heart className="w-12 h-12 text-primary" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-foreground mb-2">Volunteer</h2>
+            <p className="text-muted-foreground mb-6">
+              Help your community by responding to needs and making a real impact
+            </p>
+            <div className="space-y-2 mb-8 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                Browse community needs
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                Track your assignments
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                Build your volunteer profile
+              </p>
+            </div>
+            <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">
+              Continue as Volunteer
+            </Button>
+          </button>
+        </div>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-muted-foreground mt-8">
+          Demo app - use any email/password to continue
+        </p>
+      </div>
+    </div>
+  );
+}
