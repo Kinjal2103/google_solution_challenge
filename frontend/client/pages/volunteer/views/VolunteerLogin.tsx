@@ -1,36 +1,67 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
-
 
 interface VolunteerLoginProps {
   onLogin: () => void;
 }
 
-const SKILLS = [
-  "Medical",
-  "Food Distribution",
-  "Shelter",
-  "Education",
-  "Water & Sanitation",
-  "Logistics",
-  "Counselling",
-  "Translation",
-];
-
 export default function VolunteerLogin({ onLogin }: VolunteerLoginProps) {
   const [activeTab, setActiveTab] = useState<"signin" | "join">("signin");
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
+
+  const [organizations, setOrganizations] = useState<Array<{ id: string }>>([]);
+  const [loadingOrgs, setLoadingOrgs] = useState(false);
   
   const [joinData, setJoinData] = useState({
     fullName: "",
     phone: "",
     email: "",
-    skills: [] as string[],
+    password: "",
+    skillsText: "",
     availability: "Both",
     location: "",
+    organizationId: "",
   });
+
+  useEffect(() => {
+    if (activeTab !== "join") return;
+
+    const loadOrgs = async () => {
+      setLoadingOrgs(true);
+      try {
+        const { data: orgs, error } = await supabase
+          .from("organizations")
+          .select("id")
+          .order("created_at", { ascending: true })
+          .limit(25);
+
+        if (error) throw error;
+        const nextOrgs = (orgs ?? []) as Array<{ id: string }>;
+        setOrganizations(nextOrgs);
+        setJoinData((prev) => ({
+          ...prev,
+          organizationId: prev.organizationId || nextOrgs[0]?.id || "",
+        }));
+      } catch (err: any) {
+        console.error("Failed to load organizations", err);
+        setOrganizations([]);
+      } finally {
+        setLoadingOrgs(false);
+      }
+    };
+
+    void loadOrgs();
+  }, [activeTab]);
+
+  const parsedSkills = useMemo(() => {
+    const parts = joinData.skillsText
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return Array.from(new Set(parts));
+  }, [joinData.skillsText]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,57 +81,44 @@ export default function VolunteerLogin({ onLogin }: VolunteerLoginProps) {
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (joinData.fullName && joinData.email && joinData.skills.length > 0) {
+    if (joinData.fullName && joinData.email && joinData.password && parsedSkills.length > 0) {
       try {
-        // Fetch default organization
-        const { data: orgs, error: orgError } = await supabase
-          .from('organizations')
-          .select('id')
-          .limit(1);
-
-        if (orgError) throw new Error(`Failed to fetch organization: ${orgError.message}`);
-        if (!orgs || orgs.length === 0) throw new Error('No organization found. Please run the seed script first.');
-
-        const organizationId = orgs[0].id;
+        if (!joinData.organizationId) {
+          throw new Error("No organization selected. Please try again.");
+        }
 
         // Sign up user
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: joinData.email,
-          password: "DefaultVolunteer123!", // Dummy password for demo purposes since there's no password field in join
+          password: joinData.password,
         });
         if (authError) throw authError;
 
         // Insert into volunteers table with organization
         if (authData?.user) {
-          const { error: insertError } = await supabase.from('volunteers').insert([{
+          const payload: Record<string, unknown> = {
              id: authData.user.id,
-             organization_id: organizationId,
+             organization_id: joinData.organizationId,
              full_name: joinData.fullName,
              phone: joinData.phone,
              email: joinData.email,
-             skills: joinData.skills,
-             zone: joinData.location || 'General',
+             skills: parsedSkills,
+             zone: joinData.location || null,
              active: true,
-             reliability_score: 50
-          }]);
+          };
+
+          const { error: insertError } = await supabase
+            .from("volunteers")
+            .insert([payload]);
           if (insertError) throw insertError;
         }
 
-        alert("Registered successfully! You are logged in with password: DefaultVolunteer123!");
+        alert("Registered successfully! You can now sign in.");
         onLogin();
       } catch (err: any) {
         alert("Volunteer registration failed: " + err.message);
       }
     }
-  };
-
-  const toggleSkill = (skill: string) => {
-    setJoinData((prev) => ({
-      ...prev,
-      skills: prev.skills.includes(skill)
-        ? prev.skills.filter((s) => s !== skill)
-        : [...prev.skills, skill],
-    }));
   };
 
   return (
@@ -245,25 +263,59 @@ export default function VolunteerLogin({ onLogin }: VolunteerLoginProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-foreground mb-3">
-                Skills (Select at least one)
+              <label htmlFor="join-password" className="block text-sm font-medium text-foreground mb-2">
+                Password
               </label>
-              <div className="flex flex-wrap gap-2">
-                {SKILLS.map((skill) => (
-                  <button
-                    key={skill}
-                    type="button"
-                    onClick={() => toggleSkill(skill)}
-                    className={`px-3 py-1 rounded-full text-sm font-medium transition-all ${
-                      joinData.skills.includes(skill)
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-muted-foreground hover:bg-muted/80"
-                    }`}
-                  >
-                    {skill}
-                  </button>
-                ))}
-              </div>
+              <input
+                type="password"
+                id="join-password"
+                value={joinData.password}
+                onChange={(e) => setJoinData({ ...joinData, password: e.target.value })}
+                placeholder="Create a password"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">Organization</label>
+              <select
+                value={joinData.organizationId}
+                onChange={(e) => setJoinData({ ...joinData, organizationId: e.target.value })}
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                disabled={loadingOrgs || organizations.length === 0}
+                required
+              >
+                {organizations.length === 0 ? (
+                  <option value="">
+                    {loadingOrgs ? "Loading organizations..." : "No organizations available"}
+                  </option>
+                ) : (
+                  organizations.map((org) => (
+                    <option key={org.id} value={org.id}>
+                      {org.id}
+                    </option>
+                  ))
+                )}
+              </select>
+              <p className="text-xs text-muted-foreground mt-2">
+                If you don’t see your org, ask a coordinator to create it first.
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="skills" className="block text-sm font-medium text-foreground mb-2">
+                Skills (comma-separated)
+              </label>
+              <input
+                type="text"
+                id="skills"
+                value={joinData.skillsText}
+                onChange={(e) => setJoinData({ ...joinData, skillsText: e.target.value })}
+                placeholder="e.g. medical, logistics, translation"
+                className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 bg-background"
+                required
+              />
             </div>
 
             <div>

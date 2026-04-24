@@ -22,7 +22,9 @@ const getUrgencyColorClass = (urgency: number) => {
   return "text-green-500 drop-shadow-[0_0_8px_rgba(34,197,94,0.8)]";
 };
 
-export default function HeatmapView() {
+export default function HeatmapView(props?: {
+  onNeedSelect?: (view: string, need?: { id: string; title: string; category: string }) => void;
+}) {
   const [needs, setNeeds] = useState<NeedPoint[]>([]);
   const [selectedPin, setSelectedPin] = useState<NeedPoint | null>(null);
 
@@ -181,14 +183,11 @@ export default function HeatmapView() {
                </div>
 
                <Button className="w-full bg-primary hover:bg-primary/90 text-white" onClick={() => {
-                  // Direct to run match. If we're inside coordinator dashboard, 
-                  // we might want a global route transition, but for this self-contained view
-                  // we can just link to the volunteer-matching view via a route or state if this was a parent container.
-                  // Since we are not doing a full App context rework here, we'll alert or mock 
-                  // actually, user requirement implies "detail panel with Run match button". 
-                  // If pressed, it should ideally route to VolunteerMatching.
-                  // For now, emit a custom event to navigate, mimicking NeedsBoard.
-                  window.dispatchEvent(new CustomEvent('map-run-match', { detail: selectedPin }));
+                  props?.onNeedSelect?.("volunteer-matching", {
+                    id: selectedPin.id,
+                    title: selectedPin.title,
+                    category: selectedPin.category,
+                  });
                }}>
                  Run Match
                </Button>

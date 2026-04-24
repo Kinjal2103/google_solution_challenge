@@ -17,6 +17,8 @@ const COORDINATOR_EMAIL =
   process.env.SEED_COORDINATOR_EMAIL || "coordinator@needbridge.org";
 const COORDINATOR_PASSWORD =
   process.env.SEED_COORDINATOR_PASSWORD || "NeedBridge123!";
+const VOLUNTEER_PASSWORD =
+  process.env.SEED_VOLUNTEER_PASSWORD || "NeedBridgeVolunteer123!";
 const ORGANIZATION_NAME =
   process.env.SEED_ORGANIZATION_NAME || "NeedBridge Relief Network";
 const ORGANIZATION_EMAIL =
@@ -197,7 +199,8 @@ function calculateUrgencyScore(need) {
   if (need.category === "medical") score += 20;
   if (need.category === "food" || need.category === "water") score += 10;
 
-  return Math.min(100, score);
+  // Allow values > 100 so UI can show "critical" styling.
+  return Math.min(150, score);
 }
 
 async function findAuthUserByEmail(email) {
@@ -234,6 +237,98 @@ async function ensureCoordinatorAuthUser() {
   }
 
   return data.user;
+}
+
+async function ensureVolunteerAuthUsers() {
+  const emailToUserId = new Map();
+
+  for (const volunteer of VOLUNTEERS) {
+    const existing = await findAuthUserByEmail(volunteer.email);
+    if (existing) {
+      emailToUserId.set(volunteer.email.toLowerCase(), existing.id);
+      continue;
+    }
+
+    const { data, error } = await supabase.auth.admin.createUser({
+      email: volunteer.email,
+      password: VOLUNTEER_PASSWORD,
+      email_confirm: true,
+      user_metadata: {
+        role: "volunteer",
+        full_name: volunteer.full_name,
+      },
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    emailToUserId.set(volunteer.email.toLowerCase(), data.user.id);
+  }
+
+  return emailToUserId;
+}
+
+async function resetSeededData() {
+  // Delete outcomes/assignments linked to seeded needs, then the needs themselves.
+  const { data: seededNeeds, error: needsError } = await supabase
+    .from("needs")
+    .select("id")
+    .contains("metadata", { seed_batch: SEED_BATCH });
+
+  if (needsError) {
+    throw needsError;
+  }
+
+  const needIds = (seededNeeds ?? []).map((row) => row.id);
+  if (needIds.length > 0) {
+    const { data: seededAssignments, error: assignmentFetchError } =
+      await supabase
+        .from("assignments")
+        .select("id")
+        .in("need_id", needIds);
+
+    if (assignmentFetchError) {
+      throw assignmentFetchError;
+    }
+
+    const assignmentIds = (seededAssignments ?? []).map((row) => row.id);
+    if (assignmentIds.length > 0) {
+      const { error: outcomesDeleteError } = await supabase
+        .from("outcomes")
+        .delete()
+        .in("assignment_id", assignmentIds);
+      if (outcomesDeleteError) {
+        throw outcomesDeleteError;
+      }
+
+      const { error: assignmentsDeleteError } = await supabase
+        .from("assignments")
+        .delete()
+        .in("id", assignmentIds);
+      if (assignmentsDeleteError) {
+        throw assignmentsDeleteError;
+      }
+    }
+
+    const { error: needsDeleteError } = await supabase
+      .from("needs")
+      .delete()
+      .in("id", needIds);
+    if (needsDeleteError) {
+      throw needsDeleteError;
+    }
+  }
+
+  // Remove volunteers inserted by this seed file (by stable email list).
+  const volunteerEmails = VOLUNTEERS.map((volunteer) => volunteer.email);
+  const { error: volunteersDeleteError } = await supabase
+    .from("volunteers")
+    .delete()
+    .in("email", volunteerEmails);
+  if (volunteersDeleteError) {
+    throw volunteersDeleteError;
+  }
 }
 
 async function ensureOrganization() {
@@ -289,7 +384,7 @@ async function ensureOrganization() {
   return created;
 }
 
-async function ensureVolunteers(organizationId) {
+async function ensureVolunteers(organizationId, emailToUserId) {
   const volunteerEmails = VOLUNTEERS.map((volunteer) => volunteer.email);
 
   const { data: existing, error: fetchError } = await supabase
@@ -307,6 +402,7 @@ async function ensureVolunteers(organizationId) {
   const rowsToInsert = VOLUNTEERS.filter(
     (volunteer) => !existingEmails.has(volunteer.email),
   ).map((volunteer, index) => ({
+    id: emailToUserId.get(volunteer.email.toLowerCase()),
     organization_id: organizationId,
     full_name: volunteer.full_name,
     email: volunteer.email,
@@ -355,19 +451,6 @@ async function ensureVolunteers(organizationId) {
 }
 
 async function ensureNeeds(organizationId) {
-  const { data: existing, error: fetchError } = await supabase
-    .from("needs")
-    .select("id")
-    .contains("metadata", { seed_batch: SEED_BATCH });
-
-  if (fetchError) {
-    throw fetchError;
-  }
-
-  if ((existing || []).length > 0) {
-    return existing.length;
-  }
-
   const rowsToInsert = NEED_TEMPLATES.map((need, index) => ({
     organization_id: organizationId,
     title: need.title,
@@ -380,6 +463,7 @@ async function ensureNeeds(organizationId) {
     urgency_score: calculateUrgencyScore(need),
     volunteer_count_needed: need.volunteer_count_needed,
     required_skills: need.required_skills,
+    status: "open",
     metadata: {
       seed_batch: SEED_BATCH,
       seed_key: `need-${index + 1}`,
@@ -586,13 +670,19 @@ async function ensureDemoAssignmentAndOutcome(volunteers, coordinatorUserId) {
 async function seedDatabase() {
   console.log("Starting Supabase seed...");
 
+  await resetSeededData();
+  console.log(`Cleared previous seeded rows for batch: ${SEED_BATCH}`);
+
   const coordinatorUser = await ensureCoordinatorAuthUser();
   console.log(`Coordinator auth user ready: ${COORDINATOR_EMAIL}`);
+
+  const emailToUserId = await ensureVolunteerAuthUsers();
+  console.log(`Volunteer auth users ready: ${VOLUNTEERS.length}`);
 
   const organization = await ensureOrganization();
   console.log(`Organization ready: ${organization.name}`);
 
-  const volunteers = await ensureVolunteers(organization.id);
+  const volunteers = await ensureVolunteers(organization.id, emailToUserId);
   console.log(`Volunteers ready: ${volunteers.length}`);
 
   const needsCount = await ensureNeeds(organization.id);
@@ -605,6 +695,9 @@ async function seedDatabase() {
   console.log("Use these coordinator credentials in the frontend login:");
   console.log(`Email: ${COORDINATOR_EMAIL}`);
   console.log(`Password: ${COORDINATOR_PASSWORD}`);
+  console.log("");
+  console.log("Use this shared volunteer password for any seeded volunteer:");
+  console.log(`Password: ${VOLUNTEER_PASSWORD}`);
 }
 
 seedDatabase().catch((error) => {

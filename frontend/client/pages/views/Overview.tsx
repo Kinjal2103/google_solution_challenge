@@ -13,8 +13,6 @@ interface OverviewViewProps {
   onNeedSelect: (view: string, need?: { id: string; title: string; category: string }) => void;
 }
 
-const categories = ["food", "water", "shelter", "medical", "education", "sanitation", "other"];
-
 const getActivityColor = (type: string) => {
   switch (type) {
     case "need":
@@ -117,6 +115,15 @@ export default function OverviewView({
     return Array.from(counts.entries());
   }, [needs]);
 
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    needs.forEach((need) => {
+      const key = (need.category || "").trim().toLowerCase();
+      if (key) set.add(key);
+    });
+    return Array.from(set.values()).sort((a, b) => a.localeCompare(b));
+  }, [needs]);
+
   const recentNeeds = useMemo(
     () =>
       [...needs]
@@ -193,6 +200,9 @@ export default function OverviewView({
             })}
             {needs.length === 0 && (
               <p className="text-sm text-muted-foreground">No open needs available.</p>
+            )}
+            {needs.length > 0 && categories.length === 0 && (
+              <p className="text-sm text-muted-foreground">No categories available.</p>
             )}
           </div>
         </div>

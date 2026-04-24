@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { fetchOpenNeeds } from "@/lib/api";
+import { expressInterest, fetchOpenNeeds, fetchVolunteerAssignments } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 interface Need {
   id: string;
@@ -21,13 +22,26 @@ export default function BrowseNeeds() {
   const [expressedInterest, setExpressedInterest] = useState<string[]>([]);
   const [needs, setNeeds] = useState<Need[]>([]);
   const [loading, setLoading] = useState(true);
+  const [submittingInterest, setSubmittingInterest] = useState<string | null>(null);
 
   useEffect(() => {
     const loadNeeds = async () => {
       setLoading(true);
       try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         const data = await fetchOpenNeeds();
         setNeeds(data || []);
+
+        if (user) {
+          const assignments = await fetchVolunteerAssignments(user.id);
+          const interestedNeedIds = (assignments || [])
+            .map((a: any) => a.need_id)
+            .filter(Boolean) as string[];
+          setExpressedInterest(Array.from(new Set(interestedNeedIds)));
+        }
       } catch (error) {
         console.error("Failed to load needs", error);
       } finally {
@@ -63,12 +77,23 @@ export default function BrowseNeeds() {
     );
   };
 
-  const toggleInterest = (needId: string) => {
-    setExpressedInterest((previous) =>
-      previous.includes(needId)
-        ? previous.filter((id) => id !== needId)
-        : [...previous, needId],
-    );
+  const toggleInterest = async (needId: string) => {
+    if (expressedInterest.includes(needId)) return;
+
+    try {
+      setSubmittingInterest(needId);
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return;
+
+      await expressInterest(needId, user.id);
+      setExpressedInterest((previous) => Array.from(new Set([...previous, needId])));
+    } catch (error) {
+      console.error("Failed to express interest", error);
+    } finally {
+      setSubmittingInterest(null);
+    }
   };
 
   const getUrgencyColor = (urgency: number) => {
@@ -191,8 +216,15 @@ export default function BrowseNeeds() {
                     : "text-primary border-primary hover:bg-primary/10"
                 }
                 onClick={() => toggleInterest(need.id)}
+                disabled={
+                  expressedInterest.includes(need.id) || submittingInterest === need.id
+                }
               >
-                {expressedInterest.includes(need.id) ? "Pending" : "Express Interest"}
+                {expressedInterest.includes(need.id)
+                  ? "Pending"
+                  : submittingInterest === need.id
+                    ? "Submitting..."
+                    : "Express Interest"}
               </Button>
             </div>
           </div>

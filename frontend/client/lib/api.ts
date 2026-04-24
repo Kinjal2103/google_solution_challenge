@@ -234,6 +234,42 @@ export async function createAssignment(needId: string, volunteerId: string) {
   return data;
 }
 
+export async function expressInterest(needId: string, volunteerId: string) {
+  const { data: existing, error: existingError } = await supabase
+    .from("assignments")
+    .select("id")
+    .eq("need_id", needId)
+    .eq("volunteer_id", volunteerId)
+    .maybeSingle();
+
+  if (existingError) {
+    throw existingError;
+  }
+
+  if (existing) {
+    return existing;
+  }
+
+  const { data, error } = await supabase
+    .from("assignments")
+    .insert([
+      {
+        need_id: needId,
+        volunteer_id: volunteerId,
+        status: "pending",
+        assigned_by: "volunteer_interest",
+      } as Record<string, unknown>,
+    ])
+    .select("id")
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return data;
+}
+
 export async function createAssignmentViaBackend(needId: string, volunteerId: string) {
   const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
   const response = await fetch(`${backendUrl}/api/assignments`, {

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
+import { fetchNeeds } from "@/lib/api";
 import LoginView from "../views/Login";
 import OverviewView from "../views/Overview";
 import NeedsBoardView from "../views/NeedsBoard";
@@ -36,6 +38,29 @@ export default function CoordinatorDashboard({
   const [isLoggedIn, setIsLoggedIn] = useState(!isLoginView);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedNeed, setSelectedNeed] = useState<SelectedNeed>(null);
+  const [coordinatorLabel, setCoordinatorLabel] = useState("Coordinator");
+  const [openNeedsCount, setOpenNeedsCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadUserAndCounts = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        setCoordinatorLabel(user?.email || "Coordinator");
+
+        const openNeeds = await fetchNeeds({ status: "open" });
+        setOpenNeedsCount(openNeeds.length);
+      } catch (err) {
+        console.error("Failed to load coordinator metadata", err);
+        setOpenNeedsCount(null);
+      }
+    };
+
+    if (isLoggedIn) {
+      void loadUserAndCounts();
+    }
+  }, [isLoggedIn]);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -58,7 +83,7 @@ export default function CoordinatorDashboard({
 
   const navItems = [
     { id: "overview", label: "Overview", view: "overview" as ViewType },
-    { id: "needs-board", label: "Needs Board", view: "needs-board" as ViewType, badge: 12 },
+    { id: "needs-board", label: "Needs Board", view: "needs-board" as ViewType, badge: openNeedsCount ?? undefined },
     { id: "heatmap", label: "Heatmap", view: "heatmap" as ViewType },
     { id: "volunteer", label: "Volunteer Matching", view: "volunteer-matching" as ViewType },
     { id: "assignments", label: "Assignment Status", view: "assignment-status" as ViewType },
@@ -117,7 +142,7 @@ export default function CoordinatorDashboard({
           {sidebarOpen && (
             <div className="px-2 py-2">
               <p className="text-xs text-sidebar-foreground/70">Logged in as</p>
-              <p className="font-medium text-sidebar-foreground text-sm truncate">Tanya Admin</p>
+              <p className="font-medium text-sidebar-foreground text-sm truncate">{coordinatorLabel}</p>
             </div>
           )}
           <Button
@@ -157,9 +182,11 @@ export default function CoordinatorDashboard({
               <div className="px-3 py-2 bg-green-50 text-status-low text-xs font-semibold rounded-full border border-green-200">
                 ● Live Updates
               </div>
+            {typeof openNeedsCount === "number" && (
               <div className="px-3 py-2 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full border border-blue-200">
-                24 Active
+                {openNeedsCount} Open
               </div>
+            )}
             </div>
           </div>
         </header>
@@ -169,7 +196,7 @@ export default function CoordinatorDashboard({
           <div className="p-6">
             {currentView === "overview" && <OverviewView onNeedSelect={navigateTo} />}
             {currentView === "needs-board" && <NeedsBoardView onNeedSelect={navigateTo} />}
-            {currentView === "heatmap" && <HeatmapView />}
+            {currentView === "heatmap" && <HeatmapView onNeedSelect={navigateTo} />}
             {currentView === "volunteer-matching" && <VolunteerMatchingView selectedNeed={selectedNeed} />}
             {currentView === "assignment-status" && <AssignmentStatusView />}
           </div>
