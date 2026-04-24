@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { fetchOpenNeeds } from "@/lib/api";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { resolveCoordinates } from "@/data/zoneCoordinates";
 
 interface NeedPoint {
   id: string;
@@ -12,6 +13,7 @@ interface NeedPoint {
   lng: number;
   lat: number;
   zone: string;
+  people_affected: number;
 }
 
 const getUrgencyColorClass = (urgency: number) => {
@@ -32,33 +34,28 @@ export default function HeatmapView() {
     try {
       const openNeeds = await fetchOpenNeeds();
       if (!openNeeds) return;
-      
-      const parsedNeeds = openNeeds.map((need: any) => {
-        let lng = 0, lat = 0;
-        if (need.location) {
-          // Parse Postgres point "(lng,lat)" string
-          const coords = need.location.replace(/[()]/g, '').split(',').map(Number);
-          if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
-            lng = coords[0];
-            lat = coords[1];
-          }
-        } else {
-          // Random fallback for testing layout
-          lng = -74.0060 + (Math.random() - 0.5) * 0.1;
-          lat = 40.7128 + (Math.random() - 0.5) * 0.1;
-        }
 
-        return {
+      const parsedNeeds = openNeeds
+        .map((need: any) => {
+          const coords = resolveCoordinates(need);
+          if (!coords) {
+            return null;
+          }
+
+          return {
           id: need.id,
-          title: `Need ${need.id.substring(0,8)}`,
+          title: need.title || `Need ${need.id.substring(0, 8)}`,
           category: need.category,
           urgency_score: need.urgency_score || need.severity * 20 || 0,
           severity: need.severity,
           zone: need.zone,
-          lng,
-          lat
-        };
-      });
+          people_affected: need.people_affected || 0,
+          lng: coords.lng,
+          lat: coords.lat
+          };
+        })
+        .filter((need: NeedPoint | null): need is NeedPoint => need !== null);
+
       setNeeds(parsedNeeds);
     } catch (err) {
       console.error("Failed to map needs", err);
@@ -86,12 +83,10 @@ export default function HeatmapView() {
       maxX: maxX + padX,
       minY: minY - padY,
       maxY: maxY + padY,
-      rangeX: (maxX - minX) + passX * 2,
+      rangeX: (maxX - minX) + padX * 2,
       rangeY: (maxY - minY) + padY * 2
     };
   }, [needs]);
-
-  const passX = (layoutBounds.maxX - layoutBounds.minX) * 0.1 || 0.1;
 
   const getPosition = (lng: number, lat: number) => {
     const { minX, maxX, minY, maxY } = layoutBounds;
@@ -151,7 +146,7 @@ export default function HeatmapView() {
            ))}
            {needs.length === 0 && (
              <div className="absolute inset-0 flex items-center justify-center text-slate-400">
-               No open needs found with locations.
+               No open needs found with usable zone or metadata coordinates.
              </div>
            )}
         </div>
@@ -174,6 +169,10 @@ export default function HeatmapView() {
                  <div className="flex justify-between border-b pb-2">
                     <span className="text-muted-foreground">Zone:</span>
                     <span>{selectedPin.zone}</span>
+                 </div>
+                 <div className="flex justify-between border-b pb-2">
+                    <span className="text-muted-foreground">Beneficiaries:</span>
+                    <span>{selectedPin.people_affected}</span>
                  </div>
                  <div className="flex justify-between border-b pb-2">
                     <span className="text-muted-foreground">Coords:</span>

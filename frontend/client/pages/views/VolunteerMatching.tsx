@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { MapPin, CheckCircle, XCircle } from "lucide-react";
-import { fetchOpenNeeds, fetchVolunteers, runMatch, createAssignment, updateNeedStatus } from "@/lib/api";
+import { MapPin, CheckCircle } from "lucide-react";
+import { fetchOpenNeeds, fetchVolunteers, runMatch, createAssignmentViaBackend, updateNeedStatus } from "@/lib/api";
 
 interface Volunteer {
   id: string;
@@ -38,6 +38,7 @@ export default function VolunteerMatchingView({
   const [matches, setMatches] = useState<MatchResult[]>([]);
   const [loadingMatch, setLoadingMatch] = useState(false);
   const [assignedVols, setAssignedVols] = useState<Record<string, boolean>>({});
+  const [matchError, setMatchError] = useState("");
 
   useEffect(() => {
     loadNeedsAndVolunteers();
@@ -81,11 +82,17 @@ export default function VolunteerMatchingView({
     setLoadingMatch(true);
     setMatches([]);
     setAssignedVols({});
+    setMatchError("");
     try {
       const result = await runMatch(needId, 5);
       setMatches(result.matches || []);
     } catch (err) {
       console.error("Failed to run match", err);
+      setMatchError(
+        err instanceof Error
+          ? err.message
+          : "Matching service is unavailable right now.",
+      );
     } finally {
       setLoadingMatch(false);
     }
@@ -94,7 +101,7 @@ export default function VolunteerMatchingView({
   const handleAssign = async (volunteerId: string) => {
     if (!currentNeedId) return;
     try {
-      await createAssignment(currentNeedId, volunteerId);
+      await createAssignmentViaBackend(currentNeedId, volunteerId);
       await updateNeedStatus(currentNeedId, 'assigned');
       setAssignedVols((prev) => ({ ...prev, [volunteerId]: true }));
       // Optional: trigger refresh of needs dashboard
@@ -175,11 +182,17 @@ export default function VolunteerMatchingView({
            <p className="text-center py-10 text-muted-foreground animate-pulse">Running matching engine. This takes ~30s on first request due to cold start...</p>
         )}
 
-        {!loadingMatch && matches.length === 0 && (
+        {!loadingMatch && matchError && (
+          <p className="text-center py-10 text-red-600 border border-dashed border-red-200 rounded-lg bg-red-50">
+            {matchError}
+          </p>
+        )}
+
+        {!loadingMatch && !matchError && matches.length === 0 && (
            <p className="text-center py-10 text-muted-foreground border border-dashed rounded-lg">No matches found yet. Run match to fetch recommendations.</p>
         )}
 
-        {!loadingMatch && matches.length > 0 && (
+        {!loadingMatch && !matchError && matches.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {matches.map((match, idx) => {
               const volunteer = volunteersDict[match.volunteer_id];

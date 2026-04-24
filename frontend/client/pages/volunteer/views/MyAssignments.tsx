@@ -7,7 +7,6 @@ import { fetchVolunteerAssignments, updateAssignmentStatus, recordOutcome } from
 export default function MyAssignments() {
   const [activeTab, setActiveTab] = useState<"active" | "completed">("active");
   const [assignments, setAssignments] = useState<any[]>([]);
-  const [user, setUser] = useState<any>(null);
   
   const [loading, setLoading] = useState(true);
   const [outcomeFormMsg, setOutcomeFormMsg] = useState("");
@@ -23,7 +22,6 @@ export default function MyAssignments() {
       setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return; // Not logged in
-      setUser(user);
 
       const data = await fetchVolunteerAssignments(user.id);
       setAssignments(data || []);

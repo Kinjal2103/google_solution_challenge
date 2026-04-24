@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const needsRoutes = require('./routes/needsRoutes');
 const assignmentsRoutes = require('./routes/assignmentsRoutes');
+const volunteersRoutes = require('./routes/volunteersRoutes');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 // Routes
 app.use('/api/needs', needsRoutes);
 app.use('/api/assignments', assignmentsRoutes);
+app.use('/api/volunteers', volunteersRoutes);
 
 // Health check endpoint
 app.get('/', (req, res) => {

@@ -9,13 +9,14 @@ interface NeedsBoardViewProps {
 
 interface Need {
   id: string;
+  title: string;
   category: string;
   zone: string;
-  severity: number;
-  people_affected: number;
-  urgency_score: number;
+  severity?: number | null;
+  people_affected?: number | null;
+  urgency_score?: number | null;
   status: string;
-  created_at: string;
+  created_at?: string | null;
 }
 
 export default function NeedsBoardView({ onNeedSelect }: NeedsBoardViewProps) {
@@ -50,8 +51,8 @@ export default function NeedsBoardView({ onNeedSelect }: NeedsBoardViewProps) {
       (categoryFilter === "All" || need.category === categoryFilter)
     )
     .sort((a, b) => {
-      const aUrgency = a.urgency_score || a.severity * 20 || 0;
-      const bUrgency = b.urgency_score || b.severity * 20 || 0;
+      const aUrgency = a.urgency_score || (a.severity || 0) * 20 || 0;
+      const bUrgency = b.urgency_score || (b.severity || 0) * 20 || 0;
       if (sortOrder === "desc") {
         return bUrgency - aUrgency;
       } else {
@@ -112,7 +113,7 @@ export default function NeedsBoardView({ onNeedSelect }: NeedsBoardViewProps) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border">
-              <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">ID</th>
+              <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Emergency Title</th>
               <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Category</th>
               <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Zone</th>
               <th className="text-left px-6 py-4 text-sm font-semibold text-muted-foreground">Date Reported</th>
@@ -129,19 +130,21 @@ export default function NeedsBoardView({ onNeedSelect }: NeedsBoardViewProps) {
             ) : (
               filteredNeeds.map((need) => (
                 <tr key={need.id} className="border-b border-border hover:bg-background transition-colors">
-                  <td className="px-6 py-4 text-sm font-medium text-foreground">{need.id.substring(0, 8)}...</td>
+                  <td className="px-6 py-4 text-sm font-medium text-foreground">{need.title || `Need ${need.id.substring(0, 8)}...`}</td>
                   <td className="px-6 py-4">
                     <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-full capitalize">
                       {need.category}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-sm text-foreground">{need.zone}</td>
-                  <td className="px-6 py-4 text-sm text-foreground">{new Date(need.created_at).toLocaleDateString()}</td>
+                  <td className="px-6 py-4 text-sm text-foreground">
+                    {need.created_at ? new Date(need.created_at).toLocaleDateString() : "Unknown"}
+                  </td>
                   <td className="px-6 py-4 text-sm text-foreground text-center">{need.people_affected}</td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2">
-                      <div className={`w-2 h-6 rounded ${getUrgencyColor(need.urgency_score || need.severity * 20 || 0)}`}></div>
-                      <span className="text-sm font-semibold text-foreground">{need.urgency_score || need.severity * 20 || 0}</span>
+                      <div className={`w-2 h-6 rounded ${getUrgencyColor(need.urgency_score || (need.severity || 0) * 20 || 0)}`}></div>
+                      <span className="text-sm font-semibold text-foreground">{need.urgency_score || (need.severity || 0) * 20 || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 flex gap-2">
@@ -152,7 +155,7 @@ export default function NeedsBoardView({ onNeedSelect }: NeedsBoardViewProps) {
                       onClick={() =>
                         onNeedSelect("volunteer-matching", {
                           id: need.id,
-                          title: `Need ${need.id.substring(0,8)}...`,
+                          title: need.title || `Need ${need.id.substring(0,8)}...`,
                           category: need.category,
                         })
                       }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LogOut, Bell, User, ChevronDown } from "lucide-react";
 
 import VolunteerLogin from "./views/VolunteerLogin";
@@ -7,6 +7,8 @@ import BrowseNeeds from "./views/BrowseNeeds";
 import MyAssignments from "./views/MyAssignments";
 import MyProfile from "./views/MyProfile";
 import Notifications from "./views/Notifications";
+import { supabase } from "@/lib/supabase";
+import { fetchVolunteerProfile } from "@/lib/api";
 
 type ViewType = "home" | "browse-needs" | "assignments" | "profile" | "notifications";
 
@@ -24,7 +26,44 @@ export default function VolunteerDashboard({
   const [currentView, setCurrentView] = useState<ViewType>("home");
   const [isLoggedIn, setIsLoggedIn] = useState(!isLoginView);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-  const [unreadNotifications, setUnreadNotifications] = useState(3);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [profileName, setProfileName] = useState("Volunteer");
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setProfileName("Volunteer");
+        return;
+      }
+
+      const profile = await fetchVolunteerProfile(user.id);
+      setProfileName(
+        profile?.full_name ||
+          (user.user_metadata?.full_name as string | undefined) ||
+          user.email?.split("@")[0] ||
+          "Volunteer",
+      );
+    };
+
+    if (isLoggedIn) {
+      void loadProfile();
+    }
+  }, [isLoggedIn]);
+
+  const initials = useMemo(
+    () =>
+      profileName
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() || "")
+        .join(""),
+    [profileName],
+  );
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -105,7 +144,7 @@ export default function VolunteerDashboard({
                 className="flex items-center gap-2 p-2 hover:bg-muted rounded-lg transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
-                  SJ
+                  {initials}
                 </div>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </button>
@@ -144,7 +183,7 @@ export default function VolunteerDashboard({
           {currentView === "browse-needs" && <BrowseNeeds />}
           {currentView === "assignments" && <MyAssignments />}
           {currentView === "profile" && <MyProfile />}
-          {currentView === "notifications" && <Notifications />}
+          {currentView === "notifications" && <Notifications onUnreadChange={setUnreadNotifications} />}
         </div>
       </main>
     </div>

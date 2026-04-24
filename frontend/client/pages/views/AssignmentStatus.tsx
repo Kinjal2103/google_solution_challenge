@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Search, MapPin } from "lucide-react";
+import { fetchAssignments, updateAssignmentStatus } from "@/lib/api";
 
 interface Card {
   id: string;
@@ -9,74 +10,33 @@ interface Card {
   urgency: number;
   zone: string;
   date: string;
-  beneficiaryCount: number;
+  people_affected: number;
+  status: AssignmentStatus;
 }
+
+type AssignmentStatus =
+  | "pending"
+  | "accepted"
+  | "en_route"
+  | "on_site"
+  | "completed"
+  | "cancelled"
+  | "no_show";
 
 interface ColumnType {
-  id: "pending" | "active" | "completed";
+  id: AssignmentStatus;
   title: string;
   color: string;
-  count: number;
 }
 
-const mockCards: Record<string, Card[]> = {
-  pending: [
-    {
-      id: "p1",
-      title: "Emergency food assistance for family of 4",
-      category: "Food",
-      urgency: 95,
-      zone: "Zone A",
-      date: "Apr 20, 2024",
-      beneficiaryCount: 4,
-    },
-    {
-      id: "p2",
-      title: "School supplies for children",
-      category: "Education",
-      urgency: 65,
-      zone: "Zone B",
-      date: "Apr 18, 2024",
-      beneficiaryCount: 2,
-    },
-  ],
-  active: [
-    {
-      id: "a1",
-      title: "Household repair - leaky roof",
-      category: "Housing",
-      urgency: 78,
-      zone: "Zone C",
-      date: "Apr 17, 2024",
-      beneficiaryCount: 3,
-    },
-    {
-      id: "a2",
-      title: "Job training program enrollment",
-      category: "Employment",
-      urgency: 55,
-      zone: "Zone A",
-      date: "Apr 15, 2024",
-      beneficiaryCount: 1,
-    },
-  ],
-  completed: [
-    {
-      id: "c1",
-      title: "Medical prescription assistance",
-      category: "Health",
-      urgency: 88,
-      zone: "Zone D",
-      date: "Apr 10, 2024",
-      beneficiaryCount: 1,
-    },
-  ],
-};
-
 const columns: ColumnType[] = [
-  { id: "pending", title: "Pending", color: "bg-yellow-100", count: 2 },
-  { id: "active", title: "Active", color: "bg-blue-100", count: 2 },
-  { id: "completed", title: "Completed", color: "bg-green-100", count: 1 },
+  { id: "pending", title: "Pending", color: "bg-yellow-100" },
+  { id: "accepted", title: "Accepted", color: "bg-blue-100" },
+  { id: "en_route", title: "En Route", color: "bg-indigo-100" },
+  { id: "on_site", title: "On Site", color: "bg-purple-100" },
+  { id: "completed", title: "Completed", color: "bg-green-100" },
+  { id: "cancelled", title: "Cancelled", color: "bg-red-100" },
+  { id: "no_show", title: "No Show", color: "bg-gray-100" },
 ];
 
 const getUrgencyColor = (urgency: number) => {
@@ -87,14 +47,66 @@ const getUrgencyColor = (urgency: number) => {
 };
 
 export default function AssignmentStatusView() {
-  const [cards, setCards] = useState(mockCards);
+  const [cards, setCards] = useState<Record<AssignmentStatus, Card[]>>({
+    pending: [],
+    accepted: [],
+    en_route: [],
+    on_site: [],
+    completed: [],
+    cancelled: [],
+    no_show: [],
+  });
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
   const [draggedCard, setDraggedCard] = useState<{
     id: string;
-    fromColumn: string;
+    fromColumn: AssignmentStatus;
   } | null>(null);
 
-  const handleDragStart = (cardId: string, fromColumn: string) => {
+  useEffect(() => {
+    const loadAssignments = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchAssignments();
+        const grouped: Record<AssignmentStatus, Card[]> = {
+          pending: [],
+          accepted: [],
+          en_route: [],
+          on_site: [],
+          completed: [],
+          cancelled: [],
+          no_show: [],
+        };
+
+        (data || []).forEach((assignment: any) => {
+          const status = (assignment.status || "pending") as AssignmentStatus;
+          if (!grouped[status]) {
+            return;
+          }
+          grouped[status].push({
+            id: assignment.id,
+            title: assignment.needs?.title || `Need ${assignment.need_id?.slice(0, 8) || "Unknown"}`,
+            category: assignment.needs?.category || "Unknown",
+            urgency: assignment.needs?.urgency_score || assignment.needs?.severity || 0,
+            zone: assignment.needs?.zone || "Unknown zone",
+            date: assignment.created_at ? new Date(assignment.created_at).toLocaleDateString() : "Unknown date",
+            people_affected: assignment.needs?.people_affected || 0,
+            status,
+          });
+        });
+
+        setCards(grouped);
+      } catch (error) {
+        console.error("Failed to load assignments", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAssignments();
+  }, []);
+
+  const handleDragStart = (cardId: string, fromColumn: AssignmentStatus) => {
     setDraggedCard({ id: cardId, fromColumn });
   };
 
@@ -102,44 +114,77 @@ export default function AssignmentStatusView() {
     e.preventDefault();
   };
 
-  const handleDrop = (toColumn: string) => {
+  const handleDrop = async (toColumn: AssignmentStatus) => {
     if (!draggedCard) return;
 
-    const fromColumn = draggedCard.fromColumn as "pending" | "active" | "completed";
-    const toCol = toColumn as "pending" | "active" | "completed";
+    const fromColumn = draggedCard.fromColumn;
+    const toCol = toColumn;
 
     const card = cards[fromColumn].find((c) => c.id === draggedCard.id);
     if (!card) return;
 
+    const previousCards = cards;
     setCards({
       ...cards,
       [fromColumn]: cards[fromColumn].filter((c) => c.id !== draggedCard.id),
-      [toCol]: [...cards[toCol], card],
+      [toCol]: [...cards[toCol], { ...card, status: toCol }],
     });
+
+    try {
+      await updateAssignmentStatus(card.id, toCol);
+    } catch (error) {
+      console.error("Failed to update assignment status", error);
+      setCards(previousCards);
+    }
 
     setDraggedCard(null);
   };
 
-  const handleActionClick = (cardId: string, fromColumn: string) => {
-    const fromCol = fromColumn as "pending" | "active" | "completed";
-    const toCol = fromCol === "pending" ? ("active" as const) : ("completed" as const);
+  const getNextStatus = (status: AssignmentStatus): AssignmentStatus => {
+    switch (status) {
+      case "pending":
+        return "accepted";
+      case "accepted":
+        return "en_route";
+      case "en_route":
+        return "on_site";
+      case "on_site":
+        return "completed";
+      default:
+        return status;
+    }
+  };
 
+  const handleActionClick = async (cardId: string, fromColumn: AssignmentStatus) => {
+    const fromCol = fromColumn;
+    const toCol = getNextStatus(fromCol);
+    if (toCol === fromCol) return;
     const card = cards[fromCol].find((c) => c.id === cardId);
     if (!card) return;
 
+    const previousCards = cards;
     setCards({
       ...cards,
       [fromCol]: cards[fromCol].filter((c) => c.id !== cardId),
-      [toCol]: [...cards[toCol], card],
+      [toCol]: [...cards[toCol], { ...card, status: toCol }],
     });
+
+    try {
+      await updateAssignmentStatus(card.id, toCol);
+    } catch (error) {
+      console.error("Failed to update assignment status", error);
+      setCards(previousCards);
+    }
   };
 
-  const filteredCards = (columnId: string) => {
-    return cards[columnId as "pending" | "active" | "completed"].filter((card) =>
+  const filteredCards = (columnId: AssignmentStatus) => {
+    return cards[columnId].filter((card) =>
       card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       card.category.toLowerCase().includes(searchTerm.toLowerCase())
     );
   };
+
+  const boardColumns = useMemo(() => columns, []);
 
   return (
     <div className="space-y-6">
@@ -156,13 +201,16 @@ export default function AssignmentStatusView() {
           />
         </div>
         <div className="flex items-center text-xs text-muted-foreground bg-background px-4 py-2 rounded-lg">
-          Drag cards to move between columns or click action buttons
+          Drag cards to move status or click progress button
         </div>
       </div>
 
       {/* Kanban Board */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {columns.map((column) => (
+      {loading ? (
+        <div className="bg-white rounded-lg border border-border p-6 text-center text-muted-foreground">Loading assignments...</div>
+      ) : (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {boardColumns.map((column) => (
           <div
             key={column.id}
             className="bg-background rounded-lg border border-border p-4 min-h-96"
@@ -216,8 +264,8 @@ export default function AssignmentStatusView() {
 
                   {/* Date & Beneficiaries */}
                   <p className="text-xs text-muted-foreground mb-4">
-                    {card.date} • {card.beneficiaryCount} beneficiar
-                    {card.beneficiaryCount > 1 ? "ies" : "y"}
+                    {card.date} • {card.people_affected} beneficiar
+                    {card.people_affected > 1 ? "ies" : "y"}
                   </p>
 
                   {/* Action Button */}
@@ -225,12 +273,13 @@ export default function AssignmentStatusView() {
                     size="sm"
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                     onClick={() => handleActionClick(card.id, column.id)}
+                    disabled={["completed", "cancelled", "no_show"].includes(column.id)}
                   >
-                    {column.id === "pending"
-                      ? "Activate"
-                      : column.id === "active"
-                      ? "Complete"
-                      : "Done"}
+                    {column.id === "pending" && "Accept"}
+                    {column.id === "accepted" && "Set En Route"}
+                    {column.id === "en_route" && "Set On Site"}
+                    {column.id === "on_site" && "Complete"}
+                    {["completed", "cancelled", "no_show"].includes(column.id) && "Done"}
                   </Button>
                 </div>
               ))}
@@ -244,6 +293,7 @@ export default function AssignmentStatusView() {
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

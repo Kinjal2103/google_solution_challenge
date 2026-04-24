@@ -1,4 +1,4 @@
-const supabase = require('../config/supabaseClient'); // Ensure this points to your configured Supabase client
+const supabase = require('../config/supabase');
 
 const registerVolunteer = async (req, res) => {
   try {

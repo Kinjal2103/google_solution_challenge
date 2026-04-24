@@ -10,6 +10,7 @@ import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { createNeed } from "@/lib/api";
 
 interface ReportEmergencyFormValues {
+  title: string;
   category: string;
   zone: string;
   severity: number;
@@ -22,6 +23,7 @@ export default function ReportEmergency() {
 
   const form = useForm<ReportEmergencyFormValues>({
     defaultValues: {
+      title: "",
       category: "",
       zone: "",
       severity: 3,
@@ -36,11 +38,11 @@ export default function ReportEmergency() {
       console.log("Submitting to Supabase...", data);
       
       await createNeed({
+        title: data.title,
         category: data.category,
         zone: data.zone,
         severity: data.severity,
         people_affected: data.people_affected,
-        status: "pending",
       });
 
       setSubmitStatus("success");
@@ -90,6 +92,21 @@ export default function ReportEmergency() {
 
                 <FormField
                   control={form.control}
+                  name="title"
+                  rules={{ required: "A brief title is required" }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Emergency Detail (Title)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g. Flood stranded family of 4" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="category"
                   rules={{ required: "Category is required" }}
                   render={({ field }) => (
@@ -110,7 +127,6 @@ export default function ReportEmergency() {
                           <SelectItem value="psychosocial">Psychosocial</SelectItem>
                           <SelectItem value="livelihood">Livelihood</SelectItem>
                           <SelectItem value="education">Education</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -132,11 +148,12 @@ export default function ReportEmergency() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="Ward_1">Ward 1</SelectItem>
-                          <SelectItem value="Ward_2">Ward 2</SelectItem>
-                          <SelectItem value="Ward_3">Ward 3</SelectItem>
-                          <SelectItem value="Ward_4">Ward 4</SelectItem>
-                          <SelectItem value="Ward_5">Ward 5</SelectItem>
+                          <SelectItem value="North Mumbai">North Mumbai</SelectItem>
+                          <SelectItem value="South Mumbai">South Mumbai</SelectItem>
+                          <SelectItem value="East Delhi">East Delhi</SelectItem>
+                          <SelectItem value="West Delhi">West Delhi</SelectItem>
+                          <SelectItem value="Chennai Central">Chennai Central</SelectItem>
+                          <SelectItem value="Bhubaneswar South">Bhubaneswar South</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
