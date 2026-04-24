@@ -304,27 +304,18 @@ export async function fetchNeedHistory(needId: string) {
 }
 
 export async function runMatch(needId: string, topK = 5) {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const backendUrl = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
-  if (!session?.access_token) {
-    throw new Error("No active session JWT available for matching engine.");
-  }
-
-  const matchingUrl = import.meta.env.VITE_MATCHING_URL || "http://localhost:8000";
-
-  const response = await fetch(`${matchingUrl}/match`, {
+  const response = await fetch(`${backendUrl}/api/match`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${session.access_token}`,
     },
     body: JSON.stringify({ need_id: needId, top_k: topK }),
   });
 
   if (!response.ok) {
-    throw new Error(`Matching engine failed with status ${response.status}`);
+    throw new Error(`Matching service failed with status ${response.status}`);
   }
 
   return response.json();

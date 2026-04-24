@@ -52,6 +52,17 @@ export default function VolunteerLogin({ onLogin }: VolunteerLoginProps) {
     e.preventDefault();
     if (joinData.fullName && joinData.email && joinData.skills.length > 0) {
       try {
+        // Fetch default organization
+        const { data: orgs, error: orgError } = await supabase
+          .from('organizations')
+          .select('id')
+          .limit(1);
+
+        if (orgError) throw new Error(`Failed to fetch organization: ${orgError.message}`);
+        if (!orgs || orgs.length === 0) throw new Error('No organization found. Please run the seed script first.');
+
+        const organizationId = orgs[0].id;
+
         // Sign up user
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: joinData.email,
@@ -59,15 +70,18 @@ export default function VolunteerLogin({ onLogin }: VolunteerLoginProps) {
         });
         if (authError) throw authError;
 
-        // Insert into volunteers table
+        // Insert into volunteers table with organization
         if (authData?.user) {
           const { error: insertError } = await supabase.from('volunteers').insert([{
              id: authData.user.id,
+             organization_id: organizationId,
              full_name: joinData.fullName,
              phone: joinData.phone,
              email: joinData.email,
              skills: joinData.skills,
-             zone: joinData.location || joinData.availability // Hack to keep availability info somewhere or just drop availability since schema doesn't have it
+             zone: joinData.location || 'General',
+             active: true,
+             reliability_score: 50
           }]);
           if (insertError) throw insertError;
         }

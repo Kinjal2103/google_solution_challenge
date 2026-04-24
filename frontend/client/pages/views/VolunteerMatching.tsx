@@ -179,7 +179,7 @@ export default function VolunteerMatchingView({
         </div>
 
         {loadingMatch && (
-           <p className="text-center py-10 text-muted-foreground animate-pulse">Running matching engine. This takes ~30s on first request due to cold start...</p>
+           <p className="text-center py-10 text-muted-foreground animate-pulse">Finding best volunteer matches...</p>
         )}
 
         {!loadingMatch && matchError && (
