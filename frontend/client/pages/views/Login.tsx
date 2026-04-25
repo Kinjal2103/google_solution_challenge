@@ -85,10 +85,37 @@ export default function LoginView({ onLogin }: LoginViewProps) {
             Sign In
           </Button>
 
-          {/* Hint Text */}
-          <p className="text-xs text-muted-foreground text-center">
-            Demo: Use any email and password to continue
-          </p>
+            {/* Demo Credentials Section */}
+          <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 space-y-3">
+            <p className="text-sm font-semibold text-foreground">Demo Credentials:</p>
+            
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground">Coordinator Account:</p>
+              <div className="bg-white rounded p-2 space-y-1">
+                <p className="text-xs text-foreground">
+                  <span className="font-semibold">Email:</span> coordinator@needbridge.org
+                </p>
+                <p className="text-xs text-foreground">
+                  <span className="font-semibold">Password:</span> NeedBridge123!
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-muted-foreground">Volunteer Accounts:</p>
+              <div className="bg-white rounded p-2 space-y-1 text-xs">
+                <p className="text-foreground">
+                  <span className="font-semibold">Email:</span> aarav.singh@needbridge.org
+                </p>
+                <p className="text-foreground">
+                  <span className="font-semibold">Alt Email:</span> diya.mehta@needbridge.org
+                </p>
+                <p className="text-foreground">
+                  <span className="font-semibold">Password:</span> NeedBridgeVolunteer123!
+                </p>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>

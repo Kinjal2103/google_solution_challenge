@@ -132,3 +132,28 @@ backend/build/
 frontend/node_modules
 backend/node_modules
 backend/venv
+
+# Deployment & Documentation files
+DEPLOYMENT_GUIDE.md
+VIDEO_SCRIPT*.md
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.m4v
+
+# Video/Recording artifacts
+*.mp3
+*.wav
+*.aac
+screen_recording_*
+demo_video_*
+
+# Deployment artifacts
+*.log.deployment
+.deployment/
+deployment_logs/
+build_artifacts/
